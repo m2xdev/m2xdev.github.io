@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>m2xdev — DevSec / Security Engineer / Frontend Developer</title>
+<meta name="description" content="Портфолио m2xdev: специалист по безопасности веб-приложений, DevSecOps, пентестер.">
+
+<!-- Шрифты: JetBrains Mono для терминального/акцентного текста, Inter для основного чтения -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ===================== ПЕРЕМЕННЫЕ ТЕМЫ ===================== */
+  :root{
+    --bg: #0b0f14;            /* основной фон — глубокий тёмно-синий, не чистый чёрный */
+    --bg-panel: #10161d;      /* фон терминальных панелей */
+    --bg-panel-2: #141b23;    /* чуть светлее панель для вложенных блоков */
+    --border: #223040;        /* тонкая граница панелей */
+    --border-soft: #1a232c;
+    --text: #c9d3dc;          /* основной текст */
+    --text-dim: #7c8b99;      /* приглушённый текст */
+    --text-bright: #eef3f7;   /* заголовки */
+    --green: #3ddc84;         /* "safe / allowed" терминальный зелёный */
+    --green-dim: #234a37;
+    --red: #ff5c5c;           /* "blocked / danger" */
+    --red-dim: #4a2323;
+    --amber: #ffb454;         /* предупреждение */
+    --amber-dim: #4a3a1f;
+    --mono: 'JetBrains Mono', ui-monospace, monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+    --radius: 6px;
+    --nav-h: 64px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
+
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* лёгкая фоновая сетка, намекающая на терминал/схему сети, без шума и мигания */
+  body::before{
+    content:"";
+    position: fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(61,220,132,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,220,132,0.035) 1px, transparent 1px);
+    background-size: 42px 42px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  h1,h2,h3, .mono{ font-family: var(--mono); }
+  h1,h2,h3{ color: var(--text-bright); margin: 0 0 .5em; font-weight: 700; }
+
+  a{ color: inherit; }
+  .container{ max-width: 1120px; margin: 0 auto; padding: 0 24px; position:relative; z-index:1; }
+  section{ position: relative; z-index: 1; scroll-margin-top: var(--nav-h); }
+
+  ::selection{ background: var(--green-dim); color: var(--text-bright); }
+
+  /* видимый фокус для клавиатурной навигации — доступность */
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible{
+    outline: 2px solid var(--green);
+    outline-offset: 2px;
+  }
+
+  /* ===================== СКРОЛЛБАР ===================== */
+  ::-webkit-scrollbar{ width: 10px; }
+  ::-webkit-scrollbar-track{ background: var(--bg); }
+  ::-webkit-scrollbar-thumb{ background: var(--border); border-radius: 8px; }
+
+  /* ===================== NAVBAR ===================== */
+  .navbar{
+    position: fixed; top:0; left:0; right:0; height: var(--nav-h);
+    background: rgba(11,15,20,0.86);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-soft);
+    z-index: 100;
+    display:flex; align-items:center;
+  }
+  .navbar .container{ display:flex; align-items:center; justify-content:space-between; width:100%; }
+
+  .logo{
+    font-family: var(--mono); font-weight: 800; font-size: 1.05rem;
+    color: var(--text-bright); text-decoration:none; letter-spacing: .5px;
+    display:flex; align-items:center; gap:2px;
+  }
+  .logo .cursor{
+    display:inline-block; width:9px; height: 1.1em; background: var(--green);
+    animation: blink 1.1s steps(1) infinite;
+    margin-left: 2px;
+  }
+  @keyframes blink{ 50%{ opacity: 0; } }
+
+  .nav-links{ display:flex; gap: 6px; list-style:none; margin:0; padding:0; }
+  .nav-links a{
+    font-family: var(--mono); font-size: .84rem; text-decoration:none;
+    color: var(--text-dim); padding: 8px 12px; border-radius: var(--radius);
+    transition: color .18s ease, background .18s ease;
+    white-space: nowrap;
+  }
+  .nav-links a::before{ content:"/"; color: var(--border); margin-right:2px; }
+  .nav-links a:hover, .nav-links a:focus-visible{ color: var(--green); background: rgba(61,220,132,0.07); }
+
+  .burger{
+    display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding: 8px;
+  }
+  .burger span{ width: 22px; height: 2px; background: var(--text-bright); display:block; transition: transform .25s ease, opacity .25s ease; }
+  .burger.open span:nth-child(1){ transform: translateY(7px) rotate(45deg); }
+  .burger.open span:nth-child(2){ opacity:0; }
+  .burger.open span:nth-child(3){ transform: translateY(-7px) rotate(-45deg); }
+
+  @media (max-width: 860px){
+    .nav-links{
+      position: fixed; top: var(--nav-h); right:0; left:0;
+      flex-direction: column; background: var(--bg-panel);
+      border-bottom: 1px solid var(--border-soft);
+      padding: 10px 24px 18px;
+      transform: translateY(-8px); opacity:0; pointer-events:none;
+      transition: transform .2s ease, opacity .2s ease;
+      gap: 2px;
+    }
+    .nav-links.open{ transform: translateY(0); opacity:1; pointer-events:auto; }
+    .nav-links a{ padding: 12px 6px; border-bottom: 1px solid var(--border-soft); border-radius:0; }
+    .burger{ display:flex; }
+  }
+
+  /* ===================== ОБЩИЕ КОМПОНЕНТЫ: TERMINAL PANEL ===================== */
+  .panel{
+    background: var(--bg-panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .panel-head{
+    display:flex; align-items:center; gap:8px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-soft);
+    font-family: var(--mono); font-size: .8rem; color: var(--text-dim);
+  }
+  .panel-head .dot{ width:9px; height:9px; border-radius:50%; background: var(--border); }
+  .panel-head .prompt{ color: var(--green); }
+  .panel-body{ padding: 20px; }
+
+  .prompt-line{ font-family: var(--mono); color: var(--text-dim); font-size: .85rem; }
+  .prompt-line .sym{ color: var(--green); }
+
+  .section-head{ margin-bottom: 42px; }
+  .section-head .kicker{ font-family: var(--mono); color: var(--green); font-size: .88rem; margin-bottom: 10px; }
+  .section-head .kicker .sym{ color: var(--text-dim); }
+  .section-head h2{ font-size: clamp(1.6rem, 3vw, 2.1rem); }
+
+  .btn{
+    font-family: var(--mono); font-size: .88rem; font-weight: 500;
+    padding: 12px 22px; border-radius: var(--radius); text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+    border: 1px solid var(--border); transition: border-color .18s ease, transform .15s ease, background .18s ease;
+    background: transparent; color: var(--text-bright);
+  }
+  .btn:hover{ transform: translateY(-1px); }
+  .btn-primary{ background: var(--green); color: #06110c; border-color: var(--green); font-weight:700; }
+  .btn-primary:hover{ background:#4fe797; }
+  .btn-ghost:hover{ border-color: var(--green); color: var(--green); }
+
+  section{ padding: 96px 0; }
+  @media (max-width: 640px){ section{ padding: 64px 0; } }
+
+  /* ===================== HERO ===================== */
+  #home{
+    padding-top: calc(var(--nav-h) + 72px);
+    min-height: 88vh;
+    display:flex; align-items:center;
+  }
+  .hero-grid{ display:grid; grid-template-columns: 1.15fr .85fr; gap: 56px; align-items:center; }
+  @media (max-width: 900px){ .hero-grid{ grid-template-columns: 1fr; } }
+
+  .hero-eyebrow{ font-family: var(--mono); color: var(--text-dim); font-size: .88rem; margin-bottom: 18px; }
+  .hero-eyebrow .sym{ color: var(--green); }
+  .hero-eyebrow .cur{ display:inline-block; width:8px; height:1em; background: var(--green); vertical-align: middle; animation: blink 1.1s steps(1) infinite; margin-left:2px; }
+
+  .hero h1{
+    font-size: clamp(2.6rem, 6vw, 4.4rem);
+    line-height: 1.02;
+    margin-bottom: 18px;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 .accent{ color: var(--green); }
+  .hero .subtitle{
+    font-family: var(--mono); color: var(--text-dim); font-size: clamp(1rem, 1.6vw, 1.2rem);
+    margin-bottom: 30px; border-left: 2px solid var(--green); padding-left: 14px;
+  }
+  .hero-actions{ display:flex; gap: 14px; flex-wrap:wrap; }
+
+  /* терминал-визуализация в hero */
+  .hero-term{ font-size: .84rem; }
+  .hero-term .panel-body{ min-height: 220px; }
+  .hero-term .line{ display:block; white-space: pre-wrap; word-break: break-word; color: var(--text-dim); margin: 0 0 4px; font-family: var(--mono); }
+  .hero-term .line .ok{ color: var(--green); }
+  .hero-term .line .warn{ color: var(--amber); }
+  .hero-term .caret{ display:inline-block; width:7px; height:1em; background: var(--green); vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+
+  /* ===================== ABOUT ===================== */
+  .about-grid{ display:grid; grid-template-columns: 1.2fr .8fr; gap: 48px; }
+  @media (max-width: 860px){ .about-grid{ grid-template-columns: 1fr; } }
+  .about-text p{ margin: 0 0 16px; color: var(--text); max-width: 62ch; }
+  .about-text p:first-child{ color: var(--text-bright); font-size: 1.08rem; }
+
+  .stack-list{ list-style:none; margin:0; padding:0; font-family: var(--mono); font-size: .88rem; }
+  .stack-list li{
+    display:flex; justify-content:space-between; gap: 12px;
+    padding: 9px 0; border-bottom: 1px solid var(--border-soft); color: var(--text-dim);
+  }
+  .stack-list li span:first-child{ color: var(--text); }
+  .stack-list li span:last-child{ color: var(--green); }
+
+  /* ===================== SKILLS ===================== */
+  .skills-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  @media (max-width: 900px){ .skills-grid{ grid-template-columns: repeat(2,1fr); } }
+  @media (max-width: 600px){ .skills-grid{ grid-template-columns: 1fr; } }
+
+  .skill-card .panel-body{ padding: 18px 18px 20px; }
+  .skill-card h3{ font-size: .78rem; color: var(--text-dim); text-transform: none; letter-spacing:.2px; margin-bottom: 14px; font-weight:600; }
+  .skill-tags{ display:flex; flex-wrap:wrap; gap: 8px; }
+  .skill-tags span{
+    font-family: var(--mono); font-size: .82rem; color: var(--text);
+    border: 1px solid var(--border-soft); border-radius: 4px; padding: 5px 10px;
+    transition: border-color .18s ease, color .18s ease;
+  }
+  .skill-card:hover .skill-tags span{ border-color: var(--border); }
+  .skill-tags span:hover{ border-color: var(--green) !important; color: var(--green); }
+  .panel{ transition: border-color .2s ease, transform .2s ease; }
+  .panel.hoverable:hover{ border-color: #2c4054; transform: translateY(-2px); }
+
+  /* ===================== PROJECTS ===================== */
+  .projects-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  @media (max-width: 760px){ .projects-grid{ grid-template-columns: 1fr; } }
+
+  .project-card .panel-head{ justify-content: space-between; }
+  .project-card .panel-head .fname{ color: var(--text-bright); }
+  .project-card .panel-head .status{ font-size: .72rem; padding: 2px 8px; border-radius: 10px; border:1px solid var(--green-dim); color: var(--green); }
+  .project-card p{ color: var(--text-dim); font-size: .92rem; margin: 0 0 16px; }
+  .project-card .tags{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom: 18px; }
+  .project-card .tags span{ font-family: var(--mono); font-size: .74rem; color: var(--text-dim); border:1px solid var(--border-soft); padding: 3px 8px; border-radius:4px; }
+  .project-card .go{
+    font-family: var(--mono); font-size: .84rem; color: var(--green); text-decoration:none;
+    display:inline-flex; align-items:center; gap:6px;
+  }
+  .project-card .go:hover{ text-decoration: underline; }
+
+  /* ===================== SECURITY DEMO ===================== */
+  .demo-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom: 22px; }
+  .demo-tab{
+    font-family: var(--mono); font-size: .85rem; padding: 10px 16px;
+    border: 1px solid var(--border); border-radius: var(--radius); background: transparent; color: var(--text-dim);
+    cursor:pointer; transition: all .18s ease;
+  }
+  .demo-tab.active{ color: var(--bg); background: var(--green); border-color: var(--green); font-weight:700; }
+  .demo-tab:not(.active):hover{ border-color: var(--green); color: var(--green); }
+
+  .demo-panel{ display:none; }
+  .demo-panel.active{ display:block; }
+
+  .demo-desc{ color: var(--text-dim); font-size: .92rem; margin-bottom: 18px; max-width: 68ch; }
+
+  .demo-form{ display:flex; flex-direction: column; gap: 12px; margin-bottom: 18px; }
+  .demo-form label{ font-family: var(--mono); font-size: .8rem; color: var(--text-dim); }
+  .demo-form input, .demo-form textarea{
+    background: var(--bg-panel-2); border: 1px solid var(--border-soft); border-radius: var(--radius);
+    color: var(--text-bright); font-family: var(--mono); font-size: .9rem; padding: 12px 14px;
+    width: 100%; resize: vertical; transition: border-color .18s ease;
+  }
+  .demo-form input:focus, .demo-form textarea:focus{ border-color: var(--green); outline:none; }
+
+  .demo-console{
+    background: #070a0d; border: 1px solid var(--border-soft); border-radius: var(--radius);
+    padding: 14px 16px; font-family: var(--mono); font-size: .85rem; min-height: 96px;
+    max-height: 260px; overflow-y:auto;
+  }
+  .demo-console .placeholder{ color: var(--text-dim); }
+  .demo-console .log-line{ margin-bottom: 6px; display:flex; gap:8px; align-items:flex-start; }
+  .demo-console .log-line .tag{ flex-shrink:0; font-weight:700; }
+  .demo-console .log-line.blocked .tag{ color: var(--red); }
+  .demo-console .log-line.ok .tag{ color: var(--green); }
+  .demo-console .log-line.warn .tag{ color: var(--amber); }
+  .demo-console .log-line .msg{ color: var(--text); word-break: break-word; }
+
+  .rl-visual{ display:flex; gap:6px; margin: 14px 0; flex-wrap:wrap; }
+  .rl-bucket{ width: 22px; height: 22px; border-radius: 4px; border:1px solid var(--border-soft); background: var(--bg-panel-2); transition: background .2s ease, border-color .2s ease; }
+  .rl-bucket.filled{ background: var(--green-dim); border-color: var(--green); }
+  .rl-bucket.over{ background: var(--red-dim); border-color: var(--red); }
+
+  /* ===================== CONTACTS ===================== */
+  .contacts-grid{ display:grid; grid-template-columns: repeat(2, 1fr); gap: 20px; max-width: 720px; }
+  @media (max-width: 600px){ .contacts-grid{ grid-template-columns: 1fr; } }
+  .contact-card{ padding: 26px; display:flex; flex-direction: column; gap: 10px; text-decoration:none; }
+  .contact-card .label{ font-family: var(--mono); font-size: .78rem; color: var(--text-dim); }
+  .contact-card .value{ font-family: var(--mono); font-size: 1.05rem; color: var(--text-bright); }
+  .contact-card:hover{ border-color: var(--green); }
+  .contact-card:hover .value{ color: var(--green); }
+
+  /* ===================== FOOTER ===================== */
+  footer{ border-top: 1px solid var(--border-soft); padding: 28px 0; }
+  footer .container{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+  footer .fmono{ font-family: var(--mono); font-size: .82rem; color: var(--text-dim); }
+  footer a{ text-decoration:none; color: var(--text-dim); transition: color .18s ease; }
+  footer a:hover{ color: var(--green); }
+
+  /* уважение к пользователям с чувствительностью к анимации */
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior: auto; }
+    *, *::before, *::after{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar">
+  <div class="container">
+    <a href="#home" class="logo">m2xdev<span class="cursor"></span></a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#home">home</a></li>
+      <li><a href="#about">about</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#demo">demo</a></li>
+      <li><a href="#contacts">contacts</a></li>
+    </ul>
+    <button class="burger" id="burgerBtn" aria-label="Открыть меню" aria-expanded="false" aria-controls="navLinks">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ===================== HERO / ГЛАВНАЯ ===================== -->
+<section id="home">
+  <div class="container hero-grid hero">
+    <div>
+      <div class="hero-eyebrow"><span class="sym">$</span> whoami<span class="cur"></span></div>
+      <h1>m2xdev<br><span class="accent">DevSec Engineer.</span></h1>
+      <p class="subtitle">DevSec / Security Engineer / Frontend Developer</p>
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary" data-scroll>Смотреть проекты</a>
+        <a href="https://github.com/m2xdev" class="btn btn-ghost" target="_blank" rel="noopener noreferrer" data-external>GitHub</a>
+      </div>
+    </div>
+
+    <!-- визуальный якорь hero: имитация терминала, печатающего лог загрузки -->
+    <div class="panel hero-term">
+      <div class="panel-head"><span class="dot"></span><span class="dot"></span><span class="dot"></span>&nbsp;&nbsp;<span class="prompt">root@m2xdev</span>:~</div>
+      <div class="panel-body" id="heroTerminal" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ОБО МНЕ ===================== -->
+<section id="about">
+  <div class="container">
+    <div class="section-head">
+      <div class="kicker"><span class="sym">$</span> cat about.md</div>
+      <h2>Обо мне</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p>Специалист по безопасности веб-приложений: сочетаю разработку и атаку, чтобы находить слабые места раньше, чем это сделают другие.</p>
+        <p>Работаю на стыке DevSecOps и пентеста — провожу аудит кода, ищу уязвимости класса OWASP Top 10 и сразу закрываю их защитными инструментами собственной разработки, а не только отчётами.</p>
+        <p>Каждый защитный инструмент в моих проектах сопровождается «лабораторией» — уязвимым стендом, на котором можно безопасно воспроизвести атаку и увидеть разницу до и после защиты.</p>
+      </div>
+      <ul class="stack-list">
+        <li><span>Backend</span><span>Python</span></li>
+        <li><span>Frontend</span><span>HTML / CSS / JS</span></li>
+        <li><span>Практика</span><span>Pentest</span></li>
+        <li><span>Процессы</span><span>DevSecOps</span></li>
+        <li><span>Чек-лист</span><span>OWASP Top 10</span></li>
+        <li><span>Инструменты</span><span>Burp / Nmap / Wireshark</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== НАВЫКИ ===================== -->
+<section id="skills">
+  <div class="container">
+    <div class="section-head">
+      <div class="kicker"><span class="sym">$</span> ls -la skills/</div>
+      <h2>Навыки</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="panel skill-card hoverable">
+        <div class="panel-body">
+          <h3>Разработка</h3>
+          <div class="skill-tags">
+            <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Python</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel skill-card hoverable">
+        <div class="panel-body">
+          <h3>Практики безопасности</h3>
+          <div class="skill-tags">
+            <span>DevSecOps</span><span>OWASP Top 10</span><span>Пентестинг</span><span>Аудит кода</span>
+          </div>
+        </div>
+      </div>
+      <div class="panel skill-card hoverable">
+        <div class="panel-body">
+          <h3>Инструменты</h3>
+          <div class="skill-tags">
+            <span>Burp Suite</span><span>Nmap</span><span>Wireshark</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== ПРОЕКТЫ ===================== -->
+<section id="projects">
+  <div class="container">
+    <div class="section-head">
+      <div class="kicker"><span class="sym">$</span> cat projects.log</div>
+      <h2>Проекты</h2>
+    </div>
+    <div class="projects-grid">
+
+      <div class="panel project-card hoverable">
+        <div class="panel-head"><span class="fname">rate-limit-shield</span><span class="status">defense</span></div>
+        <div class="panel-body">
+          <p>Защита от избыточных запросов и DDoS-нагрузки: ограничение частоты обращений по IP/пользователю, настраиваемые окна и пороги.</p>
+          <div class="tags"><span>Python</span><span>Rate Limiting</span></div>
+          <a class="go" href="https://github.com/m2xdev/rate-limit-shield" target="_blank" rel="noopener noreferrer" data-external>Открыть на GitHub</a>
+        </div>
+      </div>
+
+      <div class="panel project-card hoverable">
+        <div class="panel-head"><span class="fname">xss-shield</span><span class="status">defense</span></div>
+        <div class="panel-body">
+          <p>Python-библиотека для защиты от XSS на основе nh3 — санитизация пользовательского ввода перед выводом на страницу.</p>
+          <div class="tags"><span>Python</span><span>nh3</span><span>XSS</span></div>
+          <a class="go" href="https://github.com/m2xdev/xss-shield" target="_blank" rel="noopener noreferrer" data-external>Открыть на GitHub</a>
+        </div>
+      </div>
+
+      <div class="panel project-card hoverable">
+        <div class="panel-head"><span class="fname">query-sql</span><span class="status">defense</span></div>
+        <div class="panel-body">
+          <p>Защита от SQL-инъекций через параметризованные запросы — безопасная работа с базой данных без конкатенации строк.</p>
+          <div class="tags"><span>Python</span><span>SQL Injection</span></div>
+          <a class="go" href="https://github.com/m2xdev/query-sql" target="_blank" rel="noopener noreferrer" data-external>Открыть на GitHub</a>
+        </div>
+      </div>
+
+      <div class="panel project-card hoverable">
+        <div class="panel-head"><span class="fname">csrf-shield</span><span class="status">defense</span></div>
+        <div class="panel-body">
+          <p>Защита от CSRF-атак по схеме Double Submit Cookie с подписью HMAC-SHA256 для Flask-приложений.</p>
+          <div class="tags"><span>Python</span><span>Flask</span><span>CSRF</span></div>
+          <a class="go" href="https://github.com/m2xdev/csrf-shield" target="_blank" rel="noopener noreferrer" data-external>Открыть на GitHub</a>
+        </div>
+      </div>
+
+      <div class="panel project-card hoverable">
+        <div class="panel-head"><span class="fname">xss-lab</span><span class="status">lab</span></div>
+        <div class="panel-body">
+          <p>Учебный Flask-стенд с уязвимыми и защищённые маршрутами: reflected, stored и DOM-based XSS — наглядно показывает работу xss-shield.</p>
+          <div class="tags"><span>Flask</span><span>Learning Lab</span></div>
+          <a class="go" href="https://github.com/m2xdev/xss-lab" target="_blank" rel="noopener noreferrer" data-external>Открыть на GitHub</a>
+        </div>
+      </div>
+
+      <div class="panel project-card hoverable">
+        <div class="panel-head"><span class="fname">query-lab</span><span class="status">lab</span></div>
+        <div class="panel-body">
+          <p>Стенд для отработки SQL-инъекций: уязвимые и защищённые маршруты логина, поиска и динамических имён таблиц.</p>
+          <div class="tags"><span>Flask</span><span>Learning Lab</span></div>
+          <a class="go" href="https://github.com/m2xdev/query-lab" target="_blank" rel="noopener noreferrer" data-external>Открыть на GitHub</a>
+        </div>
+      </div>
+
+      <div class="panel project-card hoverable">
+        <div class="panel-head"><span class="fname">csrf-lab</span><span class="status">lab</span></div>
+        <div class="panel-body">
+          <p>Демонстрационное приложение для csrf-shield: отправка форм без токена и с ним — видно, как срабатывает защита.</p>
+          <div class="tags"><span>Flask</span><span>Learning Lab</span></div>
+          <a class="go" href="https://github.com/m2xdev/csrf-lab" target="_blank" rel="noopener noreferrer" data-external>Открыть на GitHub</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SECURITY DEMO ===================== -->
+<section id="demo">
+  <div class="container">
+    <div class="section-head">
+      <div class="kicker"><span class="sym">$</span> ./security_demo.sh --interactive</div>
+      <h2>Security Demo</h2>
+    </div>
+
+    <div class="demo-tabs" role="tablist" aria-label="Выбор демонстрации">
+      <button class="demo-tab active" data-target="demo-xss" role="tab" aria-selected="true">XSS</button>
+      <button class="demo-tab" data-target="demo-sqli" role="tab" aria-selected="false">SQL Injection</button>
+      <button class="demo-tab" data-target="demo-csrf" role="tab" aria-selected="false">CSRF</button>
+      <button class="demo-tab" data-target="demo-rl" role="tab" aria-selected="false">Rate Limiting</button>
+    </div>
+
+    <div class="panel">
+      <div class="panel-body">
+
+        <!-- --- XSS DEMO --- -->
+        <div class="demo-panel active" id="demo-xss">
+          <p class="demo-desc">Введите произвольный текст или payload (например <span class="mono">&lt;script&gt;alert(1)&lt;/script&gt;</span>). Демо проверяет ввод по принципам xss-shield: опасные теги и обработчики событий блокируются, остальное считается безопасным.</p>
+          <form class="demo-form" id="formXss">
+            <label for="inputXss">Ввод пользователя</label>
+            <textarea id="inputXss" rows="2" placeholder="Например: <img src=x onerror=alert(1)>"></textarea>
+            <button type="submit" class="btn btn-primary">Проверить</button>
+          </form>
+          <div class="demo-console" id="consoleXss"><span class="placeholder">Ожидание ввода…</span></div>
+        </div>
+
+        <!-- --- SQLi DEMO --- -->
+        <div class="demo-panel" id="demo-sqli">
+          <p class="demo-desc">Демо имитирует параметризованный запрос из query-sql. Введите значение поля поиска или логина — конструкции вида <span class="mono">' OR 1=1 --</span> будут распознаны и заблокированы до выполнения запроса.</p>
+          <form class="demo-form" id="formSqli">
+            <label for="inputSqli">Поле поиска / логин</label>
+            <input id="inputSqli" type="text" placeholder="Например: admin' OR '1'='1">
+            <button type="submit" class="btn btn-primary">Проверить</button>
+          </form>
+          <div class="demo-console" id="consoleSqli"><span class="placeholder">Ожидание ввода…</span></div>
+        </div>
+
+        <!-- --- CSRF DEMO --- -->
+        <div class="demo-panel" id="demo-csrf">
+          <p class="demo-desc">Симуляция отправки формы, защищённой по схеме Double Submit Cookie (csrf-shield). Отправьте форму с корректным токеном и без него — увидите разницу в результате.</p>
+          <form class="demo-form" id="formCsrf">
+            <label for="tokenCsrf">CSRF-токен формы</label>
+            <input id="tokenCsrf" type="text" placeholder="Оставьте пустым или введите: valid-token" value="valid-token">
+            <button type="submit" class="btn btn-primary">Отправить форму</button>
+          </form>
+          <div class="demo-console" id="consoleCsrf"><span class="placeholder">Ожидание отправки…</span></div>
+        </div>
+
+        <!-- --- RATE LIMIT DEMO --- -->
+        <div class="demo-panel" id="demo-rl">
+          <p class="demo-desc">Имитация лимита частоты запросов из rate-limit-shield: разрешено 5 запросов за 10 секунд. Нажимайте «Проверить» быстро несколько раз подряд, чтобы увидеть блокировку.</p>
+          <form class="demo-form" id="formRl">
+            <button type="submit" class="btn btn-primary">Отправить запрос</button>
+          </form>
+          <div class="rl-visual" id="rlVisual"></div>
+          <div class="demo-console" id="consoleRl"><span class="placeholder">Счётчик запросов: 0 / 5 (окно 10 сек)</span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== КОНТАКТЫ ===================== -->
+<section id="contacts">
+  <div class="container">
+    <div class="section-head">
+      <div class="kicker"><span class="sym">$</span> contact --show</div>
+      <h2>Контакты</h2>
+    </div>
+    <div class="contacts-grid">
+      <a class="panel contact-card" href="https://github.com/m2xdev" target="_blank" rel="noopener noreferrer" data-external>
+        <span class="label">GitHub</span>
+        <span class="value">github.com/m2xdev</span>
+      </a>
+      <a class="panel contact-card" href="https://t.me/m2xdev" target="_blank" rel="noopener noreferrer" data-external>
+        <span class="label">Telegram</span>
+        <span class="value">@m2xdev</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer>
+  <div class="container">
+    <span class="fmono">© <span id="year"></span> m2xdev. Все права защищены.</span>
+    <a class="fmono" href="https://github.com/m2xdev" target="_blank" rel="noopener noreferrer" data-external>github.com/m2xdev</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ===================== ГОД В ФУТЕРЕ ===================== */
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  /* ===================== БУРГЕР-МЕНЮ ДЛЯ МОБИЛЬНЫХ ===================== */
+  var burger = document.getElementById('burgerBtn');
+  var navLinks = document.getElementById('navLinks');
+
+  burger.addEventListener('click', function(){
+    var isOpen = navLinks.classList.toggle('open');
+    burger.classList.toggle('open', isOpen);
+    burger.setAttribute('aria-expanded', String(isOpen));
+  });
+
+  /* закрываем меню при клике по любой ссылке (для мобильных) */
+  navLinks.querySelectorAll('a').forEach(function(link){
+    link.addEventListener('click', function(){
+      navLinks.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  /* ===================== ПЛАВНЫЙ СКРОЛЛ К СЕКЦИЯМ ===================== */
+  document.querySelectorAll('a[href^="#"]').forEach(function(link){
+    link.addEventListener('click', function(e){
+      var id = link.getAttribute('href');
+      var target = document.querySelector(id);
+      if (target){
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  /* ===================== ОТКРЫТИЕ GITHUB / TELEGRAM В НОВОЙ ВКЛАДКЕ ===================== */
+  /* ссылки уже имеют target="_blank", здесь дополнительно подстраховываемся программно */
+  document.querySelectorAll('[data-external]').forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      window.open(link.href, '_blank', 'noopener,noreferrer');
+    });
+  });
+
+  /* ===================== HERO: ЭФФЕКТ ПЕЧАТИ ТЕРМИНАЛА (один раз при загрузке) ===================== */
+  var heroLines = [
+    { html: 'root@m2xdev:~$ whoami', cls: '' },
+    { html: 'm2xdev — DevSec / Security Engineer / Frontend Developer', cls: 'ok' },
+    { html: 'root@m2xdev:~$ ./scan.sh --target=self --checklist owasp-top10', cls: '' },
+    { html: '[OK] XSS ............ защищено (xss-shield)', cls: 'ok' },
+    { html: '[OK] SQL Injection .. защищено (query-sql)', cls: 'ok' },
+    { html: '[OK] CSRF ........... защищено (csrf-shield)', cls: 'ok' },
+    { html: '[!!] Rate Limiting .. в разработке (rate-limit-shield)', cls: 'warn' },
+    { html: 'root@m2xdev:~$ _', cls: '' }
+  ];
+
+  var termEl = document.getElementById('heroTerminal');
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function renderStaticTerminal(){
+    termEl.innerHTML = heroLines.map(function(l){
+      return '<span class="line' + (l.cls ? ' ' + l.cls : '') + '">' + l.html + '</span>';
+    }).join('');
+  }
+
+  function typeTerminal(){
+    var lineIndex = 0;
+    var charIndex = 0;
+    var currentSpan = null;
+
+    function step(){
+      if (lineIndex >= heroLines.length){
+        return; // печать завершена
+      }
+      var line = heroLines[lineIndex];
+      if (charIndex === 0){
+        currentSpan = document.createElement('span');
+        currentSpan.className = 'line' + (line.cls ? ' ' + line.cls : '');
+        termEl.appendChild(currentSpan);
+      }
+      charIndex++;
+      currentSpan.textContent = line.html.slice(0, charIndex);
+      if (charIndex >= line.html.length){
+        lineIndex++;
+        charIndex = 0;
+        setTimeout(step, 140); // пауза перед следующей строкой
+      } else {
+        setTimeout(step, 14); // скорость печати символа
+      }
+    }
+    step();
+  }
+
+  if (reduceMotion){
+    renderStaticTerminal();
+  } else {
+    typeTerminal();
+  }
+
+  /* ===================== SECURITY DEMO: ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ===================== */
+  var tabs = document.querySelectorAll('.demo-tab');
+  var panels = document.querySelectorAll('.demo-panel');
+
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){ t.classList.remove('active'); t.setAttribute('aria-selected', 'false'); });
+      panels.forEach(function(p){ p.classList.remove('active'); });
+      tab.classList.add('active');
+      tab.setAttribute('aria-selected', 'true');
+      document.getElementById(tab.dataset.target).classList.add('active');
+    });
+  });
+
+  /* вспомогательная функция: добавить строку в консоль демо */
+  function logTo(consoleId, tag, tagClass, message){
+    var consoleEl = document.getElementById(consoleId);
+    var placeholder = consoleEl.querySelector('.placeholder');
+    if (placeholder) placeholder.remove();
+    var line = document.createElement('div');
+    line.className = 'log-line ' + tagClass;
+    line.innerHTML = '<span class="tag">[' + tag + ']</span><span class="msg"></span>';
+    line.querySelector('.msg').textContent = message;
+    consoleEl.appendChild(line);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+  }
+
+  /* ===================== ДЕМО 1: XSS ===================== */
+  /* упрощённая проверка по принципу xss-shield: ищем теги/обработчики событий/javascript: */
+  var xssPatterns = [
+    /<script/i, /<iframe/i, /<img[^>]+onerror/i, /on\w+\s*=/i, /javascript:/i, /<svg[^>]*onload/i, /<\/?[a-z]+/i
+  ];
+
+  document.getElementById('formXss').addEventListener('submit', function(e){
+    e.preventDefault();
+    var value = document.getElementById('inputXss').value.trim();
+    if (!value){
+      logTo('consoleXss', 'warn', 'warn', 'Введите значение для проверки.');
+      return;
+    }
+    var isDangerous = xssPatterns.some(function(re){ return re.test(value); });
+    if (isDangerous){
+      logTo('consoleXss', 'ЗАБЛОКИРОВАНО', 'blocked', 'Обнаружены опасные HTML/JS-конструкции. xss-shield выполнил санитизацию ввода.');
+    } else {
+      logTo('consoleXss', 'ВЫПОЛНЕНО', 'ok', 'Ввод не содержит исполняемых конструкций — выведено на страницу как обычный текст.');
+    }
+  });
+
+  /* ===================== ДЕМО 2: SQL Injection ===================== */
+  var sqliPatterns = [
+    /'\s*or\s*'?1'?\s*=\s*'?1/i, /--/, /;\s*drop\s+table/i, /union\s+select/i, /'\s*or\s*1\s*=\s*1/i, /xp_cmdshell/i
+  ];
+
+  document.getElementById('formSqli').addEventListener('submit', function(e){
+    e.preventDefault();
+    var value = document.getElementById('inputSqli').value.trim();
+    if (!value){
+      logTo('consoleSqli', 'warn', 'warn', 'Введите значение для проверки.');
+      return;
+    }
+    var isInjection = sqliPatterns.some(function(re){ return re.test(value); });
+    if (isInjection){
+      logTo('consoleSqli', 'ЗАБЛОКИРОВАНО', 'blocked', 'Обнаружена SQL-инъекция. Запрос отклонён до обращения к базе данных.');
+    } else {
+      logTo('consoleSqli', 'ВЫПОЛНЕНО', 'ok', 'Значение безопасно передано как параметр запроса (prepared statement).');
+    }
+  });
+
+  /* ===================== ДЕМО 3: CSRF ===================== */
+  document.getElementById('formCsrf').addEventListener('submit', function(e){
+    e.preventDefault();
+    var token = document.getElementById('tokenCsrf').value.trim();
+    if (token === 'valid-token'){
+      logTo('consoleCsrf', 'ВЫПОЛНЕНО', 'ok', 'Токен формы совпал с токеном в cookie (Double Submit Cookie). Запрос принят.');
+    } else {
+      logTo('consoleCsrf', 'ЗАБЛОКИРОВАНО', 'blocked', 'Токен отсутствует или не совпадает с cookie. csrf-shield отклонил запрос.');
+    }
+  });
+
+  /* ===================== ДЕМО 4: RATE LIMITING ===================== */
+  var RL_LIMIT = 5;
+  var RL_WINDOW_MS = 10000;
+  var rlTimestamps = [];
+  var rlVisual = document.getElementById('rlVisual');
+
+  function renderRlBuckets(){
+    rlVisual.innerHTML = '';
+    for (var i = 0; i < RL_LIMIT; i++){
+      var bucket = document.createElement('div');
+      bucket.className = 'rl-bucket' + (i < rlTimestamps.length ? ' filled' : '');
+      rlVisual.appendChild(bucket);
+    }
+  }
+  renderRlBuckets();
+
+  document.getElementById('formRl').addEventListener('submit', function(e){
+    e.preventDefault();
+    var now = Date.now();
+    /* убираем запросы старше окна */
+    rlTimestamps = rlTimestamps.filter(function(t){ return now - t < RL_WINDOW_MS; });
+
+    if (rlTimestamps.length >= RL_LIMIT){
+      logTo('consoleRl', 'ЗАБЛОКИРОВАНО', 'blocked', 'Превышен лимит: ' + RL_LIMIT + ' запросов за ' + (RL_WINDOW_MS/1000) + ' секунд. Попробуйте позже.');
+      var overBucket = document.createElement('div');
+      overBucket.className = 'rl-bucket over';
+      rlVisual.appendChild(overBucket);
+      setTimeout(function(){ overBucket.remove(); }, 500);
+      return;
+    }
+
+    rlTimestamps.push(now);
+    logTo('consoleRl', 'ВЫПОЛНЕНО', 'ok', 'Запрос принят (' + rlTimestamps.length + '/' + RL_LIMIT + ' в текущем окне).');
+    renderRlBuckets();
+
+    setTimeout(function(){
+      renderRlBuckets();
+    }, RL_WINDOW_MS + 50);
+  });
+
+})();
+</script>
+</body>
+</html>
