@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>404 — не найдено | m2xdev</title>
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0b0f14">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<style>
+  /* JetBrains Mono — self-hosted, latin + cyrillic subsets */
+  @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:100 800;font-display:swap;
+    src:url('/assets/fonts/JetBrainsMono-latin.woff2') format('woff2');
+    unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;}
+  @font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:100 800;font-display:swap;
+    src:url('/assets/fonts/JetBrainsMono-cyrillic.woff2') format('woff2');
+    unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116;}
+
+  :root{
+    --bg:#0b0f14; --panel:#10161d; --border:#223040; --border-soft:#1a232c;
+    --text:#c9d3dc; --dim:#7c8b99; --bright:#eef3f7; --green:#3ddc84; --red:#ff5c5c;
+    --mono:'JetBrains Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  }
+  *{ box-sizing:border-box; }
+  html{ color-scheme: dark; }
+  body{
+    margin:0; min-height:100vh; min-height:100svh;
+    display:grid; place-items:center; padding:24px;
+    background-color:var(--bg); color:var(--text);
+    background-image:
+      linear-gradient(rgba(61,220,132,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,220,132,0.035) 1px, transparent 1px);
+    background-size:42px 42px;
+    font-family:var(--mono); line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .panel{
+    width:100%; max-width:560px;
+    background:var(--panel); border:1px solid var(--border); border-radius:6px;
+  }
+  .head{
+    display:flex; align-items:center; gap:8px; padding:10px 16px;
+    border-bottom:1px solid var(--border-soft); font-size:.8rem; color:var(--dim);
+  }
+  .dot{ width:9px; height:9px; border-radius:50%; background:var(--border); }
+  .body{ padding:24px 22px 28px; }
+  .code{ font-size:clamp(2.4rem,12vw,3.4rem); font-weight:700; color:var(--bright); margin:0 0 4px; letter-spacing:-.5px; }
+  .code .x{ color:var(--red); }
+  .msg{ color:var(--dim); font-size:.92rem; margin:0 0 6px; word-break:break-word; }
+  .msg .sym{ color:var(--green); }
+  .hint{ color:var(--dim); font-size:.84rem; margin:0 0 22px; }
+  a.back{
+    display:inline-flex; align-items:center; gap:8px; min-height:44px; padding:0 20px;
+    background:var(--green); color:#06110c; border:1px solid var(--green); border-radius:6px;
+    text-decoration:none; font-weight:700; font-size:.88rem;
+  }
+  a.back:hover{ background:#4fe797; }
+  a.back:focus-visible{ outline:2px solid var(--green); outline-offset:3px; }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; } }
+</style>
+</head>
+<body>
+  <main class="panel">
+    <div class="head">
+      <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+      &nbsp;&nbsp;<span style="color:var(--green)">root@m2xdev</span>:~ 404
+    </div>
+    <div class="body">
+      <p class="code">40<span class="x">4</span></p>
+      <p class="msg"><span class="sym">$</span> <span id="req">GET /</span></p>
+      <p class="hint">[!] страница не найдена — возможно, она была перемещена или удалена.</p>
+      <a class="back" href="/">← вернуться на главную</a>
+    </div>
+  </main>
+  <script>
+    var path = location.pathname;
+    try { path = decodeURIComponent(path); } catch (err) { /* невалидный percent-encoding — показываем как есть */ }
+    document.getElementById('req').textContent = 'GET ' + path + ' → 404';
+  </script>
+</body>
+</html>

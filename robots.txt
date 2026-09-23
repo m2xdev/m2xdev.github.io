@@ -1,0 +1,6 @@
+# https://m2xdev.github.io
+
+User-agent: *
+Allow: /
+
+Sitemap: https://m2xdev.github.io/sitemap.xml
