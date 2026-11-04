@@ -1,25 +1,25 @@
 /* --- Базовые переменные (светлая тема) --- */
 :root {
-  --bg: #0f172a;
-  --text: #f8fafc;
-  --card: #1e293b;
-  --accent: #38bdf8;
-  --border: #334155;
+  --bg: #e0f2fe;        /* Нежно-ледяной фон (светлая тема) */
+  --text: #0f172a;      /* Темно-синий текст */
+  --card: #ffffff;      /* Белые карточки */
+  --accent: #0284c7;    /* Ледяной синий */
+  --border: #bae6fd;
 }
 
 /* Тёмная тема (включается через JS) */
 body.dark {
-  --bg: #f5f7fa;
-  --text: #1a1a1a;
-  --card: #ffffff;
-  --accent: #6366f1;
-  --border: #e5e7eb;
+  --bg: #0b132b;        /* Глубокая зимняя ночь */
+  --text: #f8fafc;      /* Снежно-белый текст */
+  --card: #1c2541;      /* Темно-синие карточки */
+  --accent: #38bdf8;    /* Яркий неоновый лед */
+  --border: #334155;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  font-family: Arial, Helvetica, sans-serif; /* Самый надежный шрифт, есть везде */
+  font-family: 'Fira Code', monospace; /* Самый надежный шрифт, есть везде */
   font-style: normal; /* Принудительно убираем курсив */
   background: var(--bg);
   color: var(--text);
@@ -197,4 +197,36 @@ footer {
 
 .project-item a:hover {
   color: var(--accent);
+}
+
+/* Стили для новогоднего снега */
+#snow-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* Чтобы снег не мешал нажимать на кнопки */
+  z-index: -1; /* Отправляем снег на самый задний план */
+}
+
+/* Новогодняя ёлка */
+.festive-tree {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  font-size: 70px; /* Размер ёлки */
+  z-index: 100;    /* Чтобы была поверх фона */
+  pointer-events: none; /* Чтобы не мешала кликать */
+  transition: transform 0.3s ease;
+}
+
+/* Добавим легкое покачивание для ёлки */
+.festive-tree:hover {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Если в темной теме ёлка сливается, добавим ей неоновое свечение */
+body.dark .festive-tree {
+  filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.6));
 }
