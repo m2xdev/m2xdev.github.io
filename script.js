@@ -102,3 +102,14 @@ window.addEventListener('resize', function() {
   width = canvas.width = window.innerWidth;
   height = canvas.height = window.innerHeight;
 });
+
+// --- Печатная машинка ---
+if (document.getElementById('typed-text')) {
+  new Typed('#typed-text', {
+    strings: ['cybersecurity specialist', 'web developer', 'just learning', 'pentester'], // Фразы, которые будут печататься
+    typeSpeed: 60,   // Скорость печати (мс)
+    backSpeed: 30,   // Скорость стирания
+    backDelay: 2000, // Пауза перед стиранием
+    loop: true       // Зациклить навсегда
+  });
+}

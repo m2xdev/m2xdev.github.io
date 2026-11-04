@@ -4,31 +4,40 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>m2xdev — profile</title>
+  
   <!-- Хакерский шрифт -->
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
-<!-- Иконки -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Иконки -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  
+  <!-- Твои стили -->
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- Кнопка переключения темы -->
-  <button id="theme-toggle" title="change themes"></button>
+  <!-- Кнопка переключения темы (добавил эмодзи) -->
+  <button id="theme-toggle" title="change themes">🌙</button>
 
   <main class="profile">
     <!-- Аватар и имя -->
     <header class="profile__header">
-      <img src="https://avatars.githubusercontent.com/u/314131609?v=4" alt="Аватар" class="avatar" />
-      <h1>m2xdev</h1>
-      <p class="tagline">cybersecurity specialist</p>
-    </header>
+  <!-- Обернули аватарку в div для шапки -->
+  <div class="avatar-wrapper">
+    <img src="https://avatars.githubusercontent.com/u/314131609?v=4" alt="Аватар" class="avatar" />
+  </div>
+  
+  <h1>m2xdev</h1>
+  
+  <!-- ИСПРАВЛЕНО: добавили span для печатной машинки -->
+  <p class="tagline"><span id="typed-text"></span></p>
+</header>
 
     <!-- Био -->
     <section class="card">
       <h2>about me</h2>
       <p>
         Learning web development and cybersecurity
-    
       </p>
     </section>
 
@@ -44,20 +53,21 @@
     </section>
 
     <!-- Мои проекты -->
-<section class="card">
-  <h2>My Projects</h2>
-  <div id="projects-container" class="projects">
-    <p>Loading projects...</p>
-  </div>
-</section>
+    <section class="card">
+      <h2>My Projects</h2>
+      <div id="projects-container" class="projects">
+        <p>Loading projects...</p>
+      </div>
+    </section>
 
     <!-- links -->
     <section class="card">
       <h2>Contact me</h2>
       <div class="links">
-        <a href="https://github.com/m2xdev" target="_blank">GitHub</a>
-        <a href="https://t.me/m2xdev" target="_blank">Telegram</a>
-        <a href="m2xdevtsmc@gmail.com">Email</a>
+        <!-- ИСПРАВЛЕНО: добавили иконки и mailto -->
+        <a href="https://github.com/m2xdev" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        <a href="https://t.me/m2xdev" target="_blank"><i class="fab fa-telegram"></i> Telegram</a>
+        <a href="mailto:m2xdevtsmc@gmail.com"><i class="fas fa-envelope"></i> Email</a>
       </div>
     </section>
   </main>
@@ -66,8 +76,13 @@
     <p>© <span id="year"></span> m2xdev </p>
   </footer>
 
-  <script src="script.js"></script>
   <!-- Новогодняя ёлка -->
-<div class="festive-tree">🎄</div>
+  <div class="festive-tree">🎄</div>
+
+  <!-- 1. Сначала подключаем библиотеку печатной машинки -->
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.16/dist/typed.umd.js"></script>
+  
+  <!-- 2. И только ПОСЛЕ неё твой главный скрипт -->
+  <script src="script.js"></script>
 </body>
 </html>

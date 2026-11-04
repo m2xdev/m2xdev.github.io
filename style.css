@@ -46,6 +46,7 @@ body {
 }
 
 .avatar {
+  position: relative;
   width: 120px;
   height: 120px;
   border-radius: 50%;
@@ -229,4 +230,23 @@ footer {
 /* Если в темной теме ёлка сливается, добавим ей неоновое свечение */
 body.dark .festive-tree {
   filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.6));
+}
+
+/* Обертка для аватарки (чтобы шапка привязалась к картинке) */
+.avatar-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* Сама шапка (с использованием эмодзи) */
+.avatar-wrapper::after {
+  content: '🎅'; /* Вот наш эмодзи */
+  position: absolute;
+  top: -35px; 
+  left: 50%;
+  transform: translateX(-50%) rotate(15deg); 
+  font-size: 55px;
+  z-index: 10;
+  pointer-events: none; 
+  text-shadow: 0 5px 10px rgba(0,0,0,0.5);
 }
